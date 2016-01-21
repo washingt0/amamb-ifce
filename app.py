@@ -25,12 +25,12 @@ def question():
 	v1 = chr(randint(42,45))
 	v2 = chr(randint(42,45))
 	v3 = chr(randint(42,45))
-	if(v1==','):
-		v1='-'
-	if(v2==','):
-		v2='+'
-	if(v3==','):
-		v3='*'
+	while v1==',':
+		v1 = chr(randint(42,45))
+	while v2==',':
+		v2 = chr(randint(42,45))
+	while v3==',':
+		v3 = chr(randint(42,45))
 	#GERA A RESPOSTA PARA SER CONFERIDA
 	if(v1=='+'):
 		if(v2=='+'):
