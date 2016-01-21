@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+<br />
+Acertos: {{acertos}}
+<p> Quanto e {{num1}} * {{num2}} + {{num3}} - {{num4}} ?
+<form method="POST" action="/solve/teste">
+	<input type="text" name="resposta" placeholder="Resposta">
+	<input type="submit">
+</form>
+{% endblock %}
