@@ -3,7 +3,7 @@ from random import randint
 
 app = Flask(__name__)
 
-app.secret_key = 'ailovebeico'
+app.secret_key = 'FQNHumNvRCy9fRbVTiiXewjDcsdeLV8scVjqUF7oV73xA6Z7hfiv9NWfUmnuLMcP'
 
 #INDEX
 @app.route("/")
