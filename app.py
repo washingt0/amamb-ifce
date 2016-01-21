@@ -22,11 +22,85 @@ def question():
 	b = randint(session['first'], session['seccond']) #
 	c = randint(session['first'], session['seccond']) #   GERA OS NUMEROS ALEATORIOS DENTRO DO NIVEL DO ALUNO
 	d = randint(session['first'], session['seccond']) #
+	v1 = chr(randint(42,45))
+	v2 = chr(randint(42,45))
+	v3 = chr(randint(42,45))
+	if(v1==','):
+		v1='-'
+	if(v2==','):
+		v2='+'
+	if(v3==','):
+		v3='*'
 	#GERA A RESPOSTA PARA SER CONFERIDA
-	session['resp']=a*b+c-d
+	if(v1=='+'):
+		if(v2=='+'):
+			if(v3=='+'):
+				session['resp']=a+b+c+d
+			elif(v3=='-'):
+				session['resp']=a+b+c-d
+			elif(v3=='*'):
+				session['resp']=a+b+c*d
+		elif(v2=='-'):
+			if(v3=='+'):
+				session['resp']=a+b-c+d
+			elif(v3=='-'):
+				session['resp']=a+b-c-d
+			elif(v3=='*'):
+				session['resp']=a+b-c*d
+		elif(v2=='*'):
+			if(v3=='+'):
+				session['resp']=a+b*c+d
+			elif(v3=='-'):
+				session['resp']=a+b*c-d
+			elif(v3=='*'):
+				session['resp']=a+b*c*d
+	elif(v1=='-'):
+		if(v2=='+'):
+			if(v3=='+'):
+				session['resp']=a-b+c+d
+			elif(v3=='-'):
+				session['resp']=a-b+c-d
+			elif(v3=='*'):
+				session['resp']=a-b+c*d
+		elif(v2=='-'):
+			if(v3=='+'):
+				session['resp']=a-b-c+d
+			elif(v3=='-'):
+				session['resp']=a-b-c-d
+			elif(v3=='*'):
+				session['resp']=a-b-c*d
+		elif(v2=='*'):
+			if(v3=='+'):
+				session['resp']=a-b*c+d
+			elif(v3=='-'):
+				session['resp']=a-b*c-d
+			elif(v3=='*'):
+				session['resp']=a-b*c*d
+	elif(v1=='*'):
+		if(v2=='+'):
+			if(v3=='+'):
+				session['resp']=a*b+c+d
+			elif(v3=='-'):
+				session['resp']=a*b+c-d
+			elif(v3=='*'):
+				session['resp']=a*b+c*d
+		elif(v2=='-'):
+			if(v3=='+'):
+				session['resp']=a*b-c+d
+			elif(v3=='-'):
+				session['resp']=a*b-c-d
+			elif(v3=='*'):
+				session['resp']=a*b-c*d
+		elif(v2=='*'):
+			if(v3=='+'):
+				session['resp']=a*b*c+d
+			elif(v3=='-'):
+				session['resp']=a*b*c-d
+			elif(v3=='*'):
+				session['resp']=a*b*c*d
 	#MUDA O PARAMETRO VERIFICADOR DA RESPOSTA
 	session['valid']=0
-	return render_template("pages/question.jade", num1=a, num2=b, num3=c, num4=d, acertos=session['count'])
+	return render_template("pages/question.jade", num1=a, num2=b, num3=c, num4=d, acertos=session['count'], q1=v1, q2=v2, q3=v3 )
 
 #PAGINA QUE FAZ A VERIFICACAO DA RESPOSTA E PONTUA NO CONTADOR DE ACERTOS 'count'
 @app.route("/solve/teste", methods=['POST', 'GET'])
