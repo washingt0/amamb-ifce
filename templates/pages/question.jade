@@ -1,0 +1,11 @@
+extends layout
+block content
+	ul	
+		p Acertos: #{acertos}
+		p Quanto e #{num1} * #{num2} + #{num3} - #{num4} ?
+		form(method="POST", action="/solve/teste")
+			input(type='text', name='resposta', placeholder='Resposta')
+			br
+			br
+			input(type='submit')
+end block

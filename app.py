@@ -5,13 +5,15 @@ app = Flask(__name__)
 
 app.secret_key = 'FQNHumNvRCy9fRbVTiiXewjDcsdeLV8scVjqUF7oV73xA6Z7hfiv9NWfUmnuLMcP'
 
+app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+
 #INDEX
 @app.route("/")
 def index():
 	session['first'] = 0
 	session['seccond']= 10
 	session['count'] = 0
-	return render_template("index.html")
+	return render_template("pages/index.jade")
 
 #GERACAO DOS NUMEROS PARA A QUESTAO
 @app.route("/solve")
@@ -24,7 +26,7 @@ def question():
 	session['resp']=a*b+c-d
 	#MUDA O PARAMETRO VERIFICADOR DA RESPOSTA
 	session['valid']=0
-	return render_template("question.html", num1=a, num2=b, num3=c, num4=d, acertos=session['count'])
+	return render_template("pages/question.jade", num1=a, num2=b, num3=c, num4=d, acertos=session['count'])
 
 #PAGINA QUE FAZ A VERIFICACAO DA RESPOSTA E PONTUA NO CONTADOR DE ACERTOS 'count'
 @app.route("/solve/teste", methods=['POST', 'GET'])
@@ -41,10 +43,10 @@ def teste():
 		if session['valid']==0:
 			session['count']+=1 #SE SIM INCREMENTA O CONTADOR SE
 			session['valid']=1
-		return 'ok<br /> <a href="/solve">Continuar</a>'
+		return render_template("pages/okay.jade")
 	else:
 		session['count']=0
-		return 'errou <br /> <a href="/"> Reiniciar</a>'
+		return render_template("pages/wrong.jade")
 
 #USAR O DEBUG APENAS ENQUANTO ESTIVER MEXENDO NO CODIGO
-app.run(debug=False, use_reloader=True, host='0.0.0.0')
+app.run(debug=True, use_reloader=True, host='0.0.0.0')
