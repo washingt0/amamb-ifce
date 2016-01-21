@@ -11,7 +11,7 @@ def index():
 	session['first'] = 0
 	session['seccond']= 10
 	session['count'] = 0
-	return render_template("index.jade")
+	return render_template("index.html")
 
 @app.route("/solve")
 def question():
