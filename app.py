@@ -106,7 +106,12 @@ def question():
 @app.route("/solve/teste", methods=['POST', 'GET'])
 def teste():
 	#RECEBE O VALOR QUE O USUARIO DIGITOU E ARMAZENA EM 'aluno'
-	aluno = int(request.form['resposta'])
+	try:
+		aluno = int(request.form['resposta'])
+	except ValueError:
+		session['count']=0
+		return render_template("pages/wrong.jade")
+
 	#VERIFICA SE ELE JA RESPONDEU PELO MENOS 5 QUESTOES NO LEVEL ATUAL ANTES DE AUMENTAR O TAMANHO DOS NUMEROS
 	if (session['count']%5==0) and (session['count']>1):
 		session['first']+=10
