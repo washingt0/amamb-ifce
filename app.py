@@ -25,7 +25,7 @@ def question():
 @app.route("/solve/teste", methods=['POST', 'GET'])
 def teste():
 	aluno = int(request.form['resposta'])
-	if session['count']%5==0:
+	if (session['count']%5==0) and (session['count']>1):
 		session['first']+=10
 		session['seccond']+=30
 
@@ -39,4 +39,4 @@ def teste():
 		return 'errou <br /> <a href="/"> Reiniciar</a>'
 
 if __name__ == '__main__':
-	app.run(use_reloader=True, host='0.0.0.0')
+	app.run(debug=True, use_reloader=True, host='0.0.0.0')
