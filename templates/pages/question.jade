@@ -3,7 +3,7 @@ extends layout
 block content
 	ul	
 		p Acertos: #{acertos}
-		p Quanto e #{num1} #{q1} #{num2} #{q2} #{num3} #{q3} #{num4} ?
+		p #{expressao} = ?
 		form(method="POST", action="/solve/teste")
 			input(type='text', name='resposta', placeholder='Resposta')
 			br
