@@ -1,0 +1,10 @@
+# bytecode
+*.py[cod]
+# virtualenv
+env/
+# logs
+pip-log.txt
+# sqlite
+*.db
+# IDEs
+.idea/
