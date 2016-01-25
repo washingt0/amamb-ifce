@@ -1,8 +1,12 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 24px sans-serif;
 }
 
-a {
-  color: #00B7FF;
+div.main-container {
+  max-width: 768px;
+  padding: 10px;
+}
+
+input.resp-input {
+  font-size: 22px;
 }
