@@ -2,6 +2,8 @@
 *.py[cod]
 # virtualenv
 env/
+# deploy
+*.wsgi
 # logs
 pip-log.txt
 # sqlite

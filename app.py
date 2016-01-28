@@ -1,11 +1,9 @@
-from flask import Flask, request, render_template, session, url_for, redirect
+from flask import Flask, request, render_template, session
 from random import randint
 import rexpr
 
 app = Flask(__name__)
-
-app.secret_key = 'FQNHumNvRCy9fRbVTiiXewjDcsdeLV8scVjqUF7oV73xA6Z7hfiv9NWfUmnuLMcP'
-
+app.config.from_object('config')
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
 #INDEX
@@ -16,25 +14,12 @@ def index():
 	session['count'] = 0
 	return render_template("pages/index.jade")
 
-# expressoes apenas para testes
-TEST_DB = [
-	'1+1',
-	'1+2',
-	'1-2',
-	'1+2-3',
-	'1+2+3-1+4',
-	'2*1',
-	'1*2+1',
-	'1+3-2',
-	'1-3+4*2',
-	'3*4+2+1*5',
-]
-
 #GERACAO DOS NUMEROS PARA A QUESTAO
 @app.route("/solve")
 def question():
 	# escolhe um modelo de expressao
-	mod = TEST_DB[ randint( 0, len(TEST_DB)-1 ) ]
+	# FIXME: mover para banco de dados!
+	mod = app.config['EXPR_TEST_DB'][ randint( 0, len(app.config['EXPR_TEST_DB'])-1 ) ]
 	# compila a expressao
 	expr, text, count = rexpr.compile(mod)
 	args = []
@@ -74,5 +59,5 @@ def teste():
 		session['count']=0
 		return render_template("pages/wrong.jade")
 
-#USAR O DEBUG APENAS ENQUANTO ESTIVER MEXENDO NO CODIGO
-app.run(debug=True, use_reloader=True, host='0.0.0.0')
+if __name__ == '__main__' :
+	app.run(host='0.0.0.0')

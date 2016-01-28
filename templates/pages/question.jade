@@ -2,7 +2,7 @@ extends layout
 - var title = 'AMAMB - Questao'
 block content
 	h3.page-header Acertos: #{acertos}
-	form(method="POST", action="/solve/teste")
+	form(method="POST", action=url_for('teste'))
 		label.col-xs-4.col-md-6.control-label(for='resp-input',id='label-pergunta') `#{expressao}`
 		div.col-xs-1.col-md-1 =
 		div.col-xs-4.col-md-4
