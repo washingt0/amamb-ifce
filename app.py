@@ -1,12 +1,13 @@
 from flask import Flask, request, render_template, session
 from random import randint
 import rexpr
+import hashlib
 
 app = Flask(__name__)
 app.config.from_object('config')
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
-#INDEX
+# INDEX
 @app.route("/")
 def index():
 	session['first'] = 0
@@ -14,7 +15,7 @@ def index():
 	session['count'] = 0
 	return render_template("pages/index.jade")
 
-#GERACAO DOS NUMEROS PARA A QUESTAO
+# GERACAO DOS NUMEROS PARA A QUESTAO
 @app.route("/solve")
 def question():
 	# escolhe um modelo de expressao
@@ -27,30 +28,32 @@ def question():
 	for i in xrange(count) :
 		args.append( randint( session['first'], session['seccond'] ) )
 	# resolve a expressao com os valores gerados
-	session['resp'] = rexpr.eval(expr,args)
+	resp = hashlib.md5(str(rexpr.eval(expr,args))+"paodebatata")
 	# monta string legivel da expressao
 	expressao = text.format(*tuple(args))
 	#MUDA O PARAMETRO VERIFICADOR DA RESPOSTA
 	session['valid']=0
-	return render_template("pages/question.jade", expressao=expressao, acertos=session['count'])
+	return render_template("pages/question.jade", expressao=expressao, acertos=session['count'], secret=resp.hexdigest())
 
-#PAGINA QUE FAZ A VERIFICACAO DA RESPOSTA E PONTUA NO CONTADOR DE ACERTOS 'count'
+# PAGINA QUE FAZ A VERIFICACAO DA RESPOSTA E PONTUA NO CONTADOR DE ACERTOS 'count'
 @app.route("/solve/teste", methods=['POST', 'GET'])
 def teste():
-	#RECEBE O VALOR QUE O USUARIO DIGITOU E ARMAZENA EM 'aluno'
+	# RECEBE O VALOR QUE O USUARIO DIGITOU E ARMAZENA EM 'aluno'
 	try:
-		aluno = int(request.form['resposta'])
+		correcao = hashlib.md5(request.form['resposta']+"paodebatata")
+		aluno = correcao.hexdigest()
+		gabarito = request.form['resp']
 	except ValueError:
 		session['count']=0
 		return render_template("pages/wrong.jade")
 
-	#VERIFICA SE ELE JA RESPONDEU PELO MENOS 5 QUESTOES NO LEVEL ATUAL ANTES DE AUMENTAR O TAMANHO DOS NUMEROS
+	# VERIFICA SE ELE JA RESPONDEU PELO MENOS 5 QUESTOES NO LEVEL ATUAL ANTES DE AUMENTAR O TAMANHO DOS NUMEROS
 	if (session['count']%5==0) and (session['count']>1):
 		session['first']+=10
 		session['seccond']+=30
 
-	#VERIFICA SE A RESPOSTA ESTA CERTA
-	if aluno == session['resp']:
+	# VERIFICA SE A RESPOSTA ESTA CERTA
+	if aluno == gabarito:
 		if session['valid']==0:
 			session['count']+=1 #SE SIM INCREMENTA O CONTADOR SE
 			session['valid']=1

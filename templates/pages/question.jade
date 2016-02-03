@@ -7,6 +7,7 @@ block content
 		div.col-xs-1.col-md-1 =
 		div.col-xs-4.col-md-4
 			input.input.form-control.resp-input(name='resposta',id='resp-input',autocomplete="off",autofocus)
+			input(type='hidden', name='resp', value='#{secret}')
 		div.col-xs-2.col-md-1
 			button.btn.btn-primary(type='submit') &gt;&gt;
 end block
