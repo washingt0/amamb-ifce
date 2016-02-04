@@ -3,37 +3,32 @@
 Open Source lightweight Web App that dynamically generates basic mathematical problems.
 It's intended to provide an intuitive practical experience to students in basic education.
 
-## Installation
-
-### Prerequisites
+## Prerequisites
 
 - [Python](https://www.python.org/) >= 2.7 (2.7 recommended)
 - [pip](https://pip.pypa.io/en/stable/) (already bundled with Python >= 2.7.9)
 - [virtualenv](https://virtualenv.readthedocs.org/en/latest/index.html) (Recommended to avoid dependecies conflicts)
 
-### Installing
+## Installing
 
-#### Download the code
+Download the code
 
     $ git clone https://github.com/washingt0/amamb-ifce.git
 
-#### Create the virtual environment
+Create the virtual environment
 
     $ cd amamb-ifce
-
     $ virtualenv env
 
-#### Install dependencies
+Install dependencies
 
     $ source env/Scripts/activate
-
     $ pip install -r requirements.txt
-
     $ deactivate
 
-### Running
+## Running
 
-Every time before running the application, you should activate the virtual environment:
+Every time before running the application, you have to activate the virtual environment:
 
     $ source env/Scripts/activate
 
