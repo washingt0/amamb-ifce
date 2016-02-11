@@ -28,7 +28,8 @@ def question():
 	for i in xrange(count) :
 		args.append( randint( session['first'], session['seccond'] ) )
 	# resolve a expressao com os valores gerados
-	resp = hashlib.md5(str(rexpr.eval(expr,args))+"paodebatata")
+	result, args = rexpr.eval(expr,args)
+	resp = hashlib.md5(str(int(result))+"paodebatata")
 	# monta string legivel da expressao
 	expressao = text.format(*tuple(args))
 	#MUDA O PARAMETRO VERIFICADOR DA RESPOSTA
