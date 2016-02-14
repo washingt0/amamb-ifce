@@ -3,13 +3,17 @@ extends layout
 block content
 	h3.page-header Acertos: #{acertos}
 	form(method="POST", action=url_for('teste'))
-		label.col-xs-4.col-md-6.control-label(for='resp-input',id='label-pergunta') `#{expressao}`
-		div.col-xs-1.col-md-1 =
-		div.col-xs-4.col-md-4
-			input.input.form-control.resp-input(name='resposta',id='resp-input',autocomplete="off",autofocus)
-			input(type='hidden', name='resp', value='#{secret}')
-		div.col-xs-2.col-md-1
-			button.btn.btn-primary(type='submit') &gt;&gt;
+		div.col-xs-12.col-sm-6
+			p.text-default(id='label-pergunta') `#{expressao}`
+		div.col-xs-12.visible-xs-block
+			hr
+		div.col-xs-6.col-sm-3
+			div.input-group
+				span.input-group-addon.text-default =
+				input.input.input-lg.input-resp.form-control(name='resposta',id='resp-input',autocomplete="off",autofocus)
+		div.col-xs-4.col-sm-3
+			button.btn.btn-lg.btn-primary(type='submit') Responder
+		input(type='hidden', name='resp', value='#{secret}')
 end block
 block script
 	script(type='text/x-mathjax-config').
