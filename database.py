@@ -2,7 +2,7 @@ from sqlite3 import connect as sqlite3_connect
 from pymysql import connect as pymysql_connect
 
 def db_init(db):
-	schema = open('database/amamb.sql')
+	schema = open('database/AMAMB_SQLite.sql')
 	db.cursor().executescript(schema.read())
 	schema.close()
 	db.commit()
