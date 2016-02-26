@@ -2,6 +2,10 @@
 *.py[cod]
 # virtualenv
 env/
+bin/
+include/
+lib/
+local/
 # deploy
 *.wsgi
 # logs

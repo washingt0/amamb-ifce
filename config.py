@@ -13,9 +13,9 @@ SECRET_KEY = 'ailovebeico'
 """
 Define o diretorio raiz sob o qual a aplicacao esta rodando.
 Ex.:
-	Para uma aplicacao rodando em `mysite.com` ou `myapp.mysite.com`
-	o valor padrao `None` pode ser utilizado, caso a aplicacao
-	esteja em `mysite.com/myapp/` alterar valor para `/myapp`
+    Para uma aplicacao rodando em `mysite.com` ou `myapp.mysite.com`
+    o valor padrao `None` pode ser utilizado, caso a aplicacao
+    esteja em `mysite.com/myapp/` alterar valor para `/myapp`
 """
 APPLICATION_ROOT = None
 
@@ -30,22 +30,22 @@ Configuracao temporaria para testes de expressoes.
 """
 # FIXME: mover para banco de dados!
 EXPR_TEST_DB = [
-	'1+1',
-	'1+2',
-	'1-2',
-	'1+(2-3)',
-	'(1+[2+3])-1+4',
-	'2*1',
-	'1*(2+1)',
-	'1+3-2',
-	'(1-[3+4])*2',
-	'(3*[4+{2+1}])*5',
-	'1^1',
-	'1^2',
-	'(1*2)^3',
-	'(1^[2+3])*4',
-	'1/2',
-	'q(1)',
-	'q(1)*2',
-	'1/2+q(3)*4^5',
+    '1+1',
+    '1+2',
+    '1-2',
+    '1+(2-3)',
+    '(1+[2+3])-1+4',
+    '2*1',
+    '1*(2+1)',
+    '1+3-2',
+    '(1-[3+4])*2',
+    '(3*[4+{2+1}])*5',
+    '1^1',
+    '1^2',
+    '(1*2)^3',
+    '(1^[2+3])*4',
+    '1/2',
+    'q(1)',
+    'q(1)*2',
+    '1/2+q(3)*4^5',
 ]
