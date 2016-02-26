@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, g
+from database import db_connect, db_init
 from random import randint
 import rexpr
 import hashlib
@@ -7,6 +8,17 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
+def get_db():
+    db = getattr(g,'_db_instance',None)
+    if db is None:
+        db = g._db_instance = db_connect(app.config)
+    return db
+
+@app.teardown_appcontext
+def db_close():
+    db = getattr(g,'_db_instance',None)
+    if db is not None:
+        db.close()
 
 # INDEX
 @app.route("/")
@@ -81,4 +93,10 @@ def teste():
 
 
 if __name__ == '__main__':
+    if app.config['DEBUG'] == True or app.config['TESTING'] == True:
+        import os.path
+        if not os.path.isfile(app.config['DB_NAME'] + '.db'):
+            db = db_connect(app.config)
+            db_init(db)
+            db.close()
     app.run(host='0.0.0.0')

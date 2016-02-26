@@ -26,6 +26,26 @@ Ativar apenas para execucao de testes.
 TESTING = False
 
 """
+Nome do banco SQL a ser utilizado pela aplicacao.
+"""
+DB_NAME = 'amamb'
+
+"""
+Host do banco de dados MySQL.
+"""
+MYSQL_DB_HOST = 'localhost'
+
+"""
+Nome de usuario do banco de dados.
+"""
+MYSQL_DB_USER = 'amamb'
+
+"""
+Senha do banco de dados.
+"""
+MYSQL_DB_PASSWORD = 'amamb123'
+
+"""
 Configuracao temporaria para testes de expressoes.
 """
 # FIXME: mover para banco de dados!
