@@ -1,0 +1,26 @@
+extends layout
+- var title = 'Login Aluno'
+block content
+	h3.page-header Login para prova
+	form(method="POST", action=url_for('prova'))
+		div.col-xs-12.col-sm-6
+			div.input-group
+				br
+				br
+				p 
+					h4 Nome:
+				input.input.input-lg.input-nome.form-control(name='nome',id='input-nome',autocomplete="off",autofocus)
+				br
+				br
+				p 
+					h4 Email:
+				input.input.input-lg.input-email.form-control(name='email',id='input-email',autocomplete="off",autofocus)
+				br
+				br
+				p 
+					h4 Prova:
+				input.input.input-lg.input-prova.form-control(name='prova',id='input-prova',autocomplete="off",autofocus)
+				br
+				br
+				button.btn.btn-lg.btn-success(type='submit') Comecar
+end block

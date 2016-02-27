@@ -1,0 +1,27 @@
+extends layout
+- var title = 'Login Professor'
+block content
+    h3.page-header Login
+    form(method="POST", action=url_for('newprof'))
+        div.col-xs-12.col-sm-6
+            div.input-group
+                p
+                    h4 Nome:
+                input.input.input-lg.input-email.form-control(name='nome',id='input-nome',autocomplete="off",autofocus)
+                br
+                br
+                p
+                    h4 Usuario:
+                    input.input.input-lg.input-email.form-control(name='user',id='input-user',autocomplete="off",autofocus)
+                    br
+                    br
+                p
+                    h4 Senha:
+                input.input.input-lg.input-prova.form-control(name='key',id='input-key',autocomplete="off",autofocus, type='password')
+                br
+                p
+                    h4 Cornfirme a senha:
+                input.input.input-lg.input-prova.form-control(name='keyConfirm',id='input-keyConfirm',autocomplete="off",autofocus, type='password')
+                br
+                button.btn.btn-lg.btn-success(type='submit') Cadastrar
+end block

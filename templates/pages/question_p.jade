@@ -1,0 +1,28 @@
+extends layout
+- var title = 'AMAMB - Prova'
+block content
+    h3.page-header Prova
+    form(method="POST", action=url_for('teste'))
+        div.col-xs-12.col-sm-6
+            p.text-default(id='label-pergunta') `#{expressao}`
+        div.col-xs-12.visible-xs-block
+            hr
+        div.col-xs-6.col-sm-3
+            div.input-group
+                span.input-group-addon.text-default =
+                input.input.input-lg.input-resp.form-control(name='resposta',id='resp-input',autocomplete="off",autofocus)
+        div.col-xs-4.col-sm-3
+            button.btn.btn-lg.btn-primary(type='submit') Responder
+        input(type='hidden', name='resp', value='#{secret}')
+end block
+block script
+    script(type='text/x-mathjax-config').
+        MathJax.Hub.Config({
+            messageStyle: "none",
+            showMathMenu: false,
+            jax: ["input/AsciiMath","output/CommonHTML"],
+            extensions: ["asciimath2jax.js"],
+            elements: ["label-pergunta"],
+        });
+    script(src='//cdn.mathjax.org/mathjax/latest/MathJax.js', type='text/javascript', async)
+end block
