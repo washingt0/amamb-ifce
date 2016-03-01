@@ -9,17 +9,20 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
+
 def get_db():
-    db = getattr(g,'_db_instance',None)
+    db = getattr(g, '_db_instance', None)
     if db is None:
         db = g._db_instance = db_connect(app.config)
     return db
 
+
 @app.teardown_appcontext
 def db_close():
-    db = getattr(g,'_db_instance',None)
+    db = getattr(g, '_db_instance', None)
     if db is not None:
         db.close()
+
 
 # INDEX
 @app.route("/")
