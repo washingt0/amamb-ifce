@@ -174,10 +174,13 @@ def newprof():
 
         
 if __name__ == '__main__':
-    if app.config['DEBUG'] == True or app.config['TESTING'] == True:
+    def debug():
         import os.path
         if not os.path.isfile(app.config['DB_NAME'] + '.db'):
             db = db_connect(app.config)
             db_init(db)
             db.close()
+
+    if app.config['DEBUG'] == True or app.config['TESTING'] == True:
+        debug()
     app.run(host='0.0.0.0')

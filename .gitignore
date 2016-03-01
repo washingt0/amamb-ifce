@@ -5,6 +5,7 @@ env/
 bin/
 include/
 lib/
+lib64
 local/
 # deploy
 *.wsgi
