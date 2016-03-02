@@ -44,28 +44,3 @@ MYSQL_DB_USER = 'amamb'
 Senha do banco de dados.
 """
 MYSQL_DB_PASSWORD = 'amamb123'
-
-"""
-Configuracao temporaria para testes de expressoes.
-"""
-# FIXME: mover para banco de dados!
-EXPR_TEST_DB = [
-    '1+1',
-    '1+2',
-    '1-2',
-    '1+(2-3)',
-    '(1+[2+3])-1+4',
-    '2*1',
-    '1*(2+1)',
-    '1+3-2',
-    '(1-[3+4])*2',
-    '(3*[4+{2+1}])*5',
-    '1^1',
-    '1^2',
-    '(1*2)^3',
-    '(1^[2+3])*4',
-    '1/2',
-    'q(1)',
-    'q(1)*2',
-    '1/2+q(3)*4^5',
-]

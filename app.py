@@ -1,9 +1,9 @@
 from flask import Flask, request, render_template, session, g
 from database import db_connect, db_init
-from login_prof import trylogin, adduser
 from random import randint
 import rexpr
 import hashlib
+
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -27,8 +27,7 @@ def db_close():
 # INDEX
 @app.route("/")
 def index():
-    session['first'] = 0
-    session['seccond'] = 10
+    session['difi'] = 1
     session['count'] = 0
     # verificador para evitar o salto de questoes
     session['valid'] = 1
@@ -40,15 +39,19 @@ def index():
 # GERACAO DOS NUMEROS PARA A QUESTAO
 @app.route("/solve")
 def question():
-    # escolhe um modelo de expressao
-    # FIXME: mover para banco de dados!
-    mod = app.config['EXPR_TEST_DB'][randint(0, len(app.config['EXPR_TEST_DB']) - 1)]
+    banco = get_db().cursor()
+    banco.execute("SELECT ID FROM QUESTAO WHERE DIFICULDADE=%s;" % (session['difi']))
+    questao = banco.fetchall()
+    quest = randint(0, len(questao)-1)
+    banco.execute("SELECT * FROM QUESTAO WHERE ID=%s;" % (questao[quest][0]))
+    questao = banco.fetchone()
+    mod = questao[2]
     # compila a expressao
     expr, text, count = rexpr.compile(mod)
     args = []
     # gera 'count' argumentos randomicos
     for i in xrange(count):
-        args.append(randint(session['first'], session['seccond']))
+        args.append(randint(questao[4], questao[5]))
     # verifica se a questao foi respondida
     if session['valid'] == 1:
         # resolve a expressao com os valores gerados
@@ -64,6 +67,7 @@ def question():
         session['quest'] = expressao
     else:
         expressao = session['quest']
+    banco.close()
     # MUDA O PARAMETRO VERIFICADOR DA RESPOSTA
     session['valid'] = 0
     # se nao for uma prova, inicia normalmente
@@ -88,9 +92,9 @@ def teste():
         return render_template("pages/wrong.jade")
 
     # VERIFICA SE ELE JA RESPONDEU PELO MENOS 5 QUESTOES NO LEVEL ATUAL ANTES DE AUMENTAR O TAMANHO DOS NUMEROS
-    if (session['count'] % 5 == 0) and (session['count'] > 1):
-        session['first'] += 10
-        session['seccond'] += 30
+    if (session['count'] % 8 == 0) and (session['count'] > 1):
+        if session['difi'] < 3:
+            session['difi'] += 1
 
     # VERIFICA SE A RESPOSTA ESTA CERTA
     if aluno == gabarito:
@@ -113,19 +117,49 @@ def pre():
 # confirma os dados da prova
 @app.route("/prova", methods=['POST', 'GET'])
 def prova():
-    session['alunoNome'] = "Nao deu"
-    session['alunoEmail'] = "Nao deu"
-    session['alunoProva'] = "Nao deu"
     try:
         session['alunoNome'] = request.form['nome']
         session['alunoEmail'] = request.form['email']
         session['alunoProva'] = request.form['prova']
+
     except ValueError:
         session['alunoNome'] = "Nao deu"
         session['alunoEmail'] = "Nao deu"
         session['alunoProva'] = "Nao deu"
-    return render_template("pages/prova.jade", nome=session['alunoNome'],
-                           email=session['alunoEmail'], prova=session['alunoProva'])
+    banco = get_db().cursor()
+    banco.execute("SELECT * FROM PROVA WHERE ID=?;", [session['alunoProva']])
+    provas = banco.fetchone()
+    banco.close()
+    if provas:
+        return render_template("pages/prova.jade", nome=session['alunoNome'],
+                               email=session['alunoEmail'], prova=session['alunoProva'])
+    else:
+        return render_template("pages/notsuccess.jade", error="Prova Inexistente")
+
+
+def adduser(name, user, key):
+    banco = get_db().cursor()
+    passw = hashlib.md5(str(key) + "lolzinho")
+    key = passw.hexdigest()
+    banco.execute("INSERT INTO PROFESSOR(NOME, USUARIO, SENHA) VALUES(?, ?, ?);", (name, user, key))
+    get_db().commit()
+    banco.close()
+    return 1
+
+
+def trylogin(user, key):
+    password = hashlib.md5(str(key) + "lolzinho")
+    key = password.hexdigest()
+    banco = get_db().cursor()
+    banco.execute("SELECT SENHA FROM PROFESSOR WHERE USUARIO=?;", [user])
+    senha = banco.fetchone()
+    banco.close()
+    if senha:
+        if key == senha[0]:
+            return 1
+        else:
+            return 0
+    return -1
 
 
 @app.route("/logar")
@@ -161,13 +195,14 @@ def cad_prof():
 def newprof():
     receive = 0
     try:
+        nome = request.form.get('nome')
         usuario = request.form.get('user')
         senha1 = request.form.get('key')
         senha2 = request.form.get('keyConfirm')
     except ValueError:
         return render_template("pages/notsuccess.jade", error="Os dados nao passaram na validacao")
     if senha1 == senha2:
-        adduser(usuario, senha1)
+        adduser(nome, usuario, senha1)
         return render_template("pages/success.jade")
     if receive == 0:
         return render_template("pages/notsuccess.jade", error="Os dados nao passaram na validacao")
