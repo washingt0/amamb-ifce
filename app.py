@@ -167,6 +167,10 @@ def prova():
         session['alunoNome'] = "Nao deu"
         session['alunoEmail'] = "Nao deu"
         session['alunoProva'] = "Nao deu"
+    try:
+        session['alunoProva'] = int(session['alunoProva'])
+    except ValueError:
+        return render_template("pages/mensagem.jade", mensagem="Prova Inexistente")
     banco = get_db().cursor()
     banco.execute("SELECT * FROM PROVA WHERE ID=?;", [session['alunoProva']])
     provas = banco.fetchone()
