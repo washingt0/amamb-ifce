@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, session, g, url_for, redirect
-from database import db_connect, db_init
+from database import db_connect, db_init, db_query
 from random import randint
 import rexpr
 import hashlib
@@ -49,30 +49,30 @@ def question():
             # verifica se ja respondeu todas as questoes
             if session['respondidas'] == session['qtd_quest']:
                 # grava a resolucao no banco
-                banco.execute("INSERT INTO RESOLUCOES(QTD_ACERTOS, NOME_ALUNO, PROVA) VALUES(?, ?, ?);",
-                              (session['count'], session['alunoNome'], session['alunoProva']))
+                banco.execute(db_query(get_db(), 'INSERT_RESOLUCAO'), (session['count'], session['alunoNome'],
+                                                                       session['alunoProva'], session['alunoEmail']))
                 get_db().commit()
                 banco.close()
                 # exibe os acertos
                 return render_template("pages/mensagem.jade", mensagem="Acertos: ", variavel=session['count'])
             # se nao terminou gera uma nova questao a partir dos padroes da prova
             else:
-                banco.execute("SELECT * FROM PROVA WHERE ID=?;", [session['alunoProva']])
+                banco.execute(db_query(get_db(), 'SELECT_PROVA'), (session['alunoProva'],))
                 thisprova = banco.fetchone()
                 session['difi'] = thisprova[3]
                 tipoq = thisprova[2]
-                banco.execute("SELECT ID FROM QUESTAO WHERE DIFICULDADE=? AND TIPO=?;", (session['difi'], tipoq))
+                banco.execute(db_query(get_db(), 'SELECT_ID_QUESTAO_TIP_DIF'), (session['difi'], tipoq))
                 questao = banco.fetchall()
                 quest = randint(0, len(questao)-1)
-                banco.execute("SELECT * FROM QUESTAO WHERE ID=?;", [questao[quest][0]])
+                banco.execute(db_query(get_db(), 'SELECT_QUESTAO_ID'), (questao[quest][0],))
                 questao = banco.fetchone()
                 mod = questao[2]
         # se nao for prova busca questoes no banco baseado na dificuldade
         else:
-            banco.execute("SELECT ID FROM QUESTAO WHERE DIFICULDADE=%s;" % (session['difi']))
+            banco.execute(db_query(get_db(), 'SELECT_ID_QUESTAO_DIF'), (session['difi'],))
             questao = banco.fetchall()
             quest = randint(0, len(questao)-1)
-            banco.execute("SELECT * FROM QUESTAO WHERE ID=%s;" % (questao[quest][0]))
+            banco.execute(db_query(get_db(), 'SELECT_QUESTAO_ID'), (questao[quest][0],))
             questao = banco.fetchone()
             mod = questao[2]
         # compila a expressao
@@ -172,7 +172,7 @@ def prova():
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Prova Inexistente")
     banco = get_db().cursor()
-    banco.execute("SELECT * FROM PROVA WHERE ID=?;", [session['alunoProva']])
+    banco.execute(db_query(get_db(), 'SELECT_PROVA'), (session['alunoProva'],))
     provas = banco.fetchone()
     banco.close()
     session['istest'] = 1
@@ -190,10 +190,13 @@ def adduser(name, user, key):
     banco = get_db().cursor()
     passw = hashlib.md5(str(key) + "lolzinho")
     key = passw.hexdigest()
-    banco.execute("INSERT INTO PROFESSOR(NOME, USUARIO, SENHA) VALUES(?, ?, ?);", (name, user, key))
-    get_db().commit()
+    try:
+        banco.execute(db_query(get_db(), 'INSERT_PROF'), (name, user, key))
+        get_db().commit()
+    except ValueError:
+        return render_template("pages/mensagem.jade", mensagem="Houvr um erro")
     banco.close()
-    return 1
+    return 0
 
 
 # funcao que tenta efetuar o login
@@ -201,7 +204,7 @@ def trylogin(user, key):
     password = hashlib.md5(str(key) + "lolzinho")
     key = password.hexdigest()
     banco = get_db().cursor()
-    banco.execute("SELECT ID,SENHA FROM PROFESSOR WHERE USUARIO=?;", [user])
+    banco.execute(db_query(get_db(), 'SELECT_LOGIN'), (user,))
     senha = banco.fetchone()
     banco.close()
     if senha:
@@ -264,9 +267,7 @@ def login():
 def res_prov():
     if session['logged']:
         banco = get_db().cursor()
-        banco.execute("SELECT RESOLUCOES.NOME_ALUNO, RESOLUCOES.QTD_ACERTOS, RESOLUCOES.PROVA, PROVA.QTD_QUESTOES,"
-                      " RESOLUCOES.EMAIL_ALUNO FROM RESOLUCOES, PROVA WHERE PROVA.ID=RESOLUCOES.PROVA AND "
-                      "PROVA.PROFESSOR=?;", [session['prof_logged']])
+        banco.execute(db_query(get_db(), 'SELECT_RESOLUCAO'), (session['prof_logged'],))
         resultados = banco.fetchall()
         banco.close()
         if resultados:
@@ -295,8 +296,11 @@ def newprof():
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
     if senha1 == senha2:
-        adduser(nome, usuario, senha1)
-        return redirect(url_for(professor))
+        try:
+            adduser(nome, usuario, senha1)
+            return render_template("pages/mensagem.jade", mensagem="Cadastro efetuado com sucesso")
+        except ValueError:
+            return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
     if receive == 0:
         return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
 
@@ -306,7 +310,7 @@ def newprof():
 def view_prov():
     if session['logged']:
         banco = get_db().cursor()
-        banco.execute("SELECT * FROM PROVA WHERE PROFESSOR=?;", [session['prof_logged']])
+        banco.execute(db_query(get_db(), 'SELECT_PROVA_PROF'), (session['prof_logged'],))
         resultados = banco.fetchall()
         banco.close()
         if resultados:
@@ -344,10 +348,8 @@ def newprov():
             test = 0
         if test:
             banco = get_db().cursor()
-            banco.execute("INSERT INTO PROVA(PROFESSOR, DIFICULDADE, TIPO, QTD_QUESTOES) VALUES(?, ?, ?, ?);",
-                          (session['prof_logged'], dific, tipo, qtd))
-            banco.execute("SELECT ID FROM PROVA WHERE QTD_QUESTOES=? AND PROFESSOR=? AND TIPO=? AND DIFICULDADE=?;"
-                          "", (qtd, session['prof_logged'], tipo, dific))
+            banco.execute(db_query(get_db(), 'INSERE_PROVA'), (session['prof_logged'], dific, tipo, qtd))
+            banco.execute(db_query(get_db(), 'SELECT_ID_PROVA'), (qtd, session['prof_logged'], tipo, dific))
             get_db().commit()
             idprova = banco.fetchone()
             banco.close()

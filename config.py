@@ -2,7 +2,7 @@
 Configura a aplicacao para modo de debugging.
 Recomendado desativar em ambiente de producao.
 """
-DEBUG = True
+DEBUG = False
 
 """
 Chave secreta usada para encriptacao.
