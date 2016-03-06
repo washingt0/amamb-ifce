@@ -1,0 +1,32 @@
+extends layout
+- var title = 'Nova Prova'
+block content
+    h3.page-header Nova Prova
+    form(method="POST", action=url_for('newprov'))
+        div.col-xs-12.col-sm-6
+            div.input-group
+                p
+                    h4 Dificuldade:
+                    select(id='input-dificuldade', name='dificuldade')
+                        option(value='1') Facil
+                        option(value='2') Medio
+                        option(value='3') Dificil
+                    br
+                    br
+                p
+                    h4 Conteudo das Questoes:
+                    select(id='input-tipo', name='tipo')
+                        option(value='1') Adicao/Subtracao
+                        option(value='2') Multiplicacao
+                        option(value='3') Divisao
+                        option(value='4') Potenciacao
+                        option(value='5') Radiciacao
+                    br
+                    br
+                p
+                    h4 Quantidade de Questoes:
+                    input.input.input-lg.input-prova.form-control(name='qtd',id='input-qtd',autocomplete="off",autofocus)
+                br
+                br
+                button.btn.btn-lg.btn-success(type='submit') Cadastrar
+end block

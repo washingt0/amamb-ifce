@@ -1,0 +1,17 @@
+extends layout
+- var title = 'Area do Professor'
+block content
+    h3.page-header Bem-vindo
+    p
+        a.btn.btn-lg.btn-success(href=url_for('index')) Inicio
+        br
+        a.btn.btn-lg.btn-success(href=url_for('view_prov')) Ver provas
+        br
+        a.btn.btn-lg.btn-success(href=url_for('res_prov')) Ver resultados
+        br
+        a.btn.btn-lg.btn-success(href=url_for('cad_prov')) Cadastrar nova prova
+        br
+        br
+        br
+        a.btn.btn-lg.btn-success(href=url_for('logout')) Sair
+end content

@@ -1,0 +1,16 @@
+extends layout
+- var title = 'Resultados'
+block content
+    h3.page-header #{mensagem} #{variavel}
+    table
+        each x in resultado
+            tr
+                td="->Nome: " + x[0]
+                td="Email: " + x[4]
+                td="Acertos: " + x[1]
+                td="Questoes: " + x[3]
+                td="Prova: " + x[2]
+    br
+
+    a.btn.btn-lg.btn-success(href=url_for('professor')) Inicio
+end content

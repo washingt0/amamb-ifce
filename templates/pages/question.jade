@@ -1,7 +1,7 @@
 extends layout
 - var title = 'AMAMB - Questao'
 block content
-	h3.page-header Acertos: #{acertos}
+	h3.page-header #{vari} #{acertos}
 	form(method="POST", action=url_for('teste'))
 		div.col-xs-12.col-sm-6
 			p.text-default(id='label-pergunta') `#{expressao}`

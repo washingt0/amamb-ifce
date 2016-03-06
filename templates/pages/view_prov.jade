@@ -1,0 +1,17 @@
+extends layout
+- var title = 'Resultados'
+- var dific = ["Facil", "Medio", "Dificil"]
+- var tipos = ["Adicao/Subtracao", "Multiplicacao", "Divisao", "Potenciacao", "Radiciacao"]
+block content
+    h3.page-header #{mensagem} #{variavel}
+    table
+        each x in resultado
+            tr
+                td="->ID: " + x[0]
+                td="Tipo: " + tipos[x[2]-1]
+                td="Dificuldade: " + dific[x[3]-1]
+                td="Qtd Questoes: " + x[4]
+    br
+
+    a.btn.btn-lg.btn-success(href=url_for('professor')) Inicio
+end content
