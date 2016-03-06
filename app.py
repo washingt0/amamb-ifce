@@ -162,7 +162,6 @@ def prova():
         session['alunoNome'] = request.form['nome']
         session['alunoEmail'] = request.form['email']
         session['alunoProva'] = request.form['prova']
-
     except ValueError:
         session['alunoNome'] = "Nao deu"
         session['alunoEmail'] = "Nao deu"
@@ -175,10 +174,10 @@ def prova():
     banco.execute(db_query(get_db(), 'SELECT_PROVA'), (session['alunoProva'],))
     provas = banco.fetchone()
     banco.close()
-    session['istest'] = 1
-    session['qtd_quest'] = provas[4]
-    session['respondidas'] = 0
     if provas:
+        session['qtd_quest'] = provas[4]
+        session['istest'] = 1
+        session['respondidas'] = 0
         return render_template("pages/prova.jade", nome=session['alunoNome'],
                                email=session['alunoEmail'], prova=provas[0])
     else:
