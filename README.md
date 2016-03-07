@@ -1,4 +1,4 @@
-# AMAMB
+# AMAMB [![Build Status](https://travis-ci.org/washingt0/amamb-ifce.svg)](https://travis-ci.org/washingt0/amamb-ifce)
 
 Open Source lightweight Web App that dynamically generates basic mathematical problems.
 It's intended to provide an intuitive practical experience to students in basic education.
@@ -30,7 +30,7 @@ Install dependencies
 
 Every time before running the application, you have to activate the virtual environment:
 
-    $ source env/Scripts/activate
+    $ source env/bin/activate
 
 Then run the application:
 
