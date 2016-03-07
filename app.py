@@ -4,7 +4,6 @@ from random import randint
 import rexpr
 import hashlib
 
-
 app = Flask(__name__)
 app.config.from_object('config')
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
@@ -358,15 +357,14 @@ def newprov():
     else:
         return redirect(url_for('logar'))
 
+def debug():
+    import os.path
+    if not os.path.isfile(app.config['DB_NAME'] + '.db'):
+        db = db_connect(app.config)
+        db_init(db)
+        db.close()
 
 if __name__ == '__main__':
-    def debug():
-        import os.path
-        if not os.path.isfile(app.config['DB_NAME'] + '.db'):
-            db = db_connect(app.config)
-            db_init(db)
-            db.close()
-
     if app.config['DEBUG'] == True or app.config['TESTING'] == True:
         debug()
     app.run(host='0.0.0.0')
