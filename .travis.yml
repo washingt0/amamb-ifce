@@ -3,11 +3,6 @@ python:
   - "2.7"
 env:
   - DB=sqlite
-  - DB=mysql
-services:
-  - mysql
-before_install:
-  - mysql -e "create database IF NOT EXISTS amamb;" -u root
 # command to install dependencies
 install: 
   - "pip install --upgrade pip"
