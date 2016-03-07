@@ -33,14 +33,14 @@ DB_NAME = 'amamb'
 """
 Host do banco de dados MySQL.
 """
-MYSQL_DB_HOST = 'localhost'
+MYSQL_DB_HOST = '127.0.0.1'
 
 """
 Nome de usuario do banco de dados.
 """
-MYSQL_DB_USER = 'amamb'
+MYSQL_DB_USER = 'root'
 
 """
 Senha do banco de dados.
 """
-MYSQL_DB_PASSWORD = 'amamb123'
+MYSQL_DB_PASSWORD = ''
