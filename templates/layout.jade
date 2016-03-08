@@ -8,5 +8,13 @@ html(lang='pt')
 		link(href='/static/style.css', rel='stylesheet')
 		block script
 	body
-		div.container.main-container
-			block content
+		div(id="top-bar-wrapper")
+			div.container(id="top-bar")
+				a(href=url_for('index'))
+					img(src="/static/amamb-logo.png",height="60")
+		div.container(id="main-container")
+			div.row(id="content-container")
+				block content
+			div.row(id="footer")
+				p.text-center
+					small © AMAMB 2016

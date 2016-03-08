@@ -2,9 +2,50 @@ body {
   font: 28px sans-serif;
 }
 
-div.main-container {
-  max-width: 768px;
-  padding: 10px;
+div#main-container {
+  max-width: 1024px;
+  padding: 20px;
+  background-color: #FFFFFF;
+}
+
+div#top-bar-wrapper {
+	background-color: #F5F5F5;
+	border-bottom: solid 1px #E8E8E8;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+div#top-bar {
+	max-width: 1024px;
+}
+
+div#footer {
+	margin-top: 20px;
+	font-size: 12px;
+	padding-top: 10px;
+	border-top: solid 1px #E8E8E8;
+	height: 100%;
+}
+
+div.index-icon {
+	padding-top: 100px;
+	display: inline-block;
+	background-size: 70px 70px;
+	background-position: center;
+	background-repeat: no-repeat;
+	font-size: 18px;
+}
+
+div.index-icon.icon-pencil {
+	background-image: url('/static/pencil-icon.png');
+}
+
+div.index-icon.icon-note {
+	background-image: url('/static/note-icon.png');
+}
+
+div.index-icon.icon-student {
+	background-image: url('/static/student-icon.png');
 }
 
 .text-default {
@@ -13,4 +54,9 @@ div.main-container {
 
 .input-resp {
 	font-size: 24px;
+}
+
+.question-container {
+	overflow-x: auto;
+	padding-bottom: 50px;
 }
