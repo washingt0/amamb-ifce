@@ -12,9 +12,10 @@ html(lang='pt')
 			div.container(id="top-bar")
 				a(href=url_for('index'))
 					img(src="/static/amamb-logo.png",height="60")
-		div.container(id="main-container")
-			div.row(id="content-container")
+		div.container-fluid(id="main-container")
+			div.container(id="content-container")
 				block content
-			div.row(id="footer")
+		div.container-fluid(id="footer")
 				p.text-center
-					small © AMAMB 2016
+					small.block-center.
+						© AMAMB 2016
