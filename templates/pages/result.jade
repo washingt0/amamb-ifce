@@ -2,6 +2,7 @@ extends layout
 - var title = 'Resultados'
 block content
     h3.page-header #{mensagem} #{variavel}
+    div(id="chart-view") 
     table
         each x in resultado
             tr
@@ -15,6 +16,28 @@ block content
 end content
 
 block script
-    script(src='//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js', type='text/javascript', async)
-    script(src='//www.gstatic.com/charts/loader.js', type='text/javascript', async)
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js', type='text/javascript')
+    script(src='//www.gstatic.com/charts/loader.js', type='text/javascript')
+    script(type='text/javascript').
+        $(function(){
+            google.charts.load('current',{'packages':['corechart']});
+            var chartLoaded = function(){
+                var data = new google.visualization.DataTable();
+                data.addColumn('string','Topping');
+                data.addColumn('number','Slices');
+                data.addRows([
+                    ['Joao',3],
+                    ['Pedro',4],
+                    ['Cicero',9]
+                ]);
+                var options = {
+                    'title': 'Resultados de prova',
+                    'width': 400,
+                    'height': 300
+                };
+                var chart = new google.visualization.BarChart($('#chart-view').get(0));
+                chart.draw(data,options);
+            };
+            google.charts.setOnLoadCallback(chartLoaded);
+        });
 end script

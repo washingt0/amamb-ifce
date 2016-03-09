@@ -169,7 +169,7 @@ def pre():
 def prova():
     try:
         session['alunoNome'] = request.form['nome']
-        session['alunoEmail'] = request.form['email']
+        session['alunoEmail'] = 'None'
         session['alunoProva'] = request.form['prova']
     except ValueError:
         session['alunoNome'] = "Nao deu"
