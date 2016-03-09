@@ -22,6 +22,12 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+@app.context_processor
+def inject_user():
+    username = None
+    if session['logged'] == 1 and 'prof_name' in session:
+        username = session['prof_name']
+    return dict(username=username)
 
 # INDEX
 @app.route("/")
@@ -36,6 +42,9 @@ def index():
     session['istest'] = 0
     return render_template("pages/index.jade")
 
+@app.route("/creditos")
+def creditos():
+    return render_template("pages/creditos.jade")
 
 # GERACAO DOS NUMEROS PARA A QUESTAO
 @app.route("/solve")
@@ -208,6 +217,7 @@ def trylogin(user, key):
     if senha:
         if key == senha[1]:
             session['prof_logged'] = senha[0]
+            session['prof_name']   = senha[2]
             return 1
         else:
             return 0

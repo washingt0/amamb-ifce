@@ -5,14 +5,14 @@ block content
 	form(method="POST", action=url_for('teste'))
 		div.question-container
 			p.text-default.text-center(id='label-pergunta') `#{expressao}`
-		div.row(style="margin-top: 10px;")
-			div.col-xs-2.col-sm-3.col-md-3
-			div.col-xs-5.col-sm-4.col-md-3
-				div.input-group
-					span.input-group-addon.text-default =
-					input.input.input-lg.input-resp.form-control(name='resposta',id='resp-input',autocomplete="off",autofocus)
-			div.col-xs-4.col-sm-4.col-md-3
-				button.btn.btn-lg.btn-primary(type='submit') Responder
+		div.row(style="margin-top: 50px;")
+			div.col-xs-12.col-sm-8.col-sm-offset-3.question-input-container
+				div.col-xs-6.col-sm-5.col-md-4
+					div.input-group
+						span.input-group-addon.text-default =
+						input.input.input-lg.input-resp.form-control(name='resposta',id='resp-input',autocomplete="off",autofocus)
+				div.col-xs-4.col-sm-4.col-md-4
+					button.btn.btn-lg.btn-primary(type='submit') Responder
 		input(type='hidden', name='resp', value='#{secret}')
 end block
 block script

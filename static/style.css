@@ -1,31 +1,33 @@
 body {
-  font: 28px sans-serif;
+  font-family: sans-serif;
   background-color: #e0e0e0;
 }
 
 div#main-container {
   padding: 20px;
   background-color: #F5F5F5;
+  max-width: 800px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
 }
 
 div#content-container {
-	max-width: 1024px;
+	max-width: 800px;
 }
 
 div#top-bar-wrapper {
-	border-bottom: solid 1px #E8E8E8;
-	padding-top: 2px;
-	padding-bottom: 2px;
+	padding-top: 5px;
 }
 
 div#top-bar {
-	max-width: 1024px;
+	max-width: 800px;
+	max-height: 65px;
+	overflow: hidden;
 }
 
 div#footer {
 	font-size: 12px;
 	padding-top: 10px;
-	border-top: solid 1px #E8E8E8;
 }
 
 div.index-icon {
@@ -59,4 +61,18 @@ div.index-icon.icon-student {
 
 .question-container {
 	overflow-x: auto;
+}
+
+form.form {
+	font-size: 22px;
+}
+
+div.user-name {
+	font-size: 18px;
+	padding-top: 12px;
+}
+
+div.question-input-container {
+	padding-left: 0;
+	padding-right: 0;
 }

@@ -9,13 +9,25 @@ html(lang='pt')
 		block script
 	body
 		div(id="top-bar-wrapper")
-			div.container(id="top-bar")
-				a(href=url_for('index'))
-					img(src="/static/amamb-logo.png",height="60")
+			div.container-fluid(id="top-bar")
+				div.col-xs-5
+					a(href=url_for('index'))
+						img(src="/static/amamb-logo.png",height="60")
+				div.col-xs-7
+					div.pull-right.text-right
+						if username
+							div.col-xs-7.user-name
+								small Prof.
+									strong #{username}
+							div.col-xs-4
+								a.btn.btn-lg.btn-default(href=url_for('logout')) Sair
 		div.container-fluid(id="main-container")
 			div.container(id="content-container")
 				block content
 		div.container-fluid(id="footer")
-				p.text-center
-					small.block-center.
-						© AMAMB 2016
+			div.text-center
+				small.block-center.
+					© AMAMB 2016
+			div.text-center
+				small.block-center
+					a(href=url_for('creditos')) Créditos
