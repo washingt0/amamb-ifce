@@ -4,7 +4,7 @@ block content
 	h3.page-header #{vari} #{acertos}
 	form(method="POST", action=url_for('teste'))
 		div.question-container
-			p.text-default.text-center(id='label-pergunta') `#{expressao}`
+			p.text-default.text-center(id='label-pergunta',style='visibility: hidden;') `#{expressao}`
 		div.row(style="margin-top: 50px;")
 			div.col-xs-12.col-sm-8.col-sm-offset-3.question-input-container
 				div.col-xs-6.col-sm-5.col-md-4
@@ -24,5 +24,15 @@ block script
 			extensions: ["asciimath2jax.js"],
 			elements: ["label-pergunta"],
 		});
+		MathJax.Hub.Queue(
+			['Typeset',MathJax.Hub,'label-pergunta'],
+			function(){
+				$('#label-pergunta')
+					.css('visibility','visible')
+					.css('display','none')
+					.fadeIn();
+			}
+		);
 	script(src='//cdn.mathjax.org/mathjax/latest/MathJax.js', type='text/javascript', async)
+	script(src='//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js', type='text/javascript', async)
 end block

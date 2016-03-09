@@ -6,7 +6,6 @@ block content
         each x in resultado
             tr
                 td="->Nome: " + x[0]
-                td="Email: " + x[4]
                 td="Acertos: " + x[1]
                 td="Questoes: " + x[3]
                 td="Prova: " + x[2]
@@ -14,3 +13,8 @@ block content
 
     a.btn.btn-lg.btn-success(href=url_for('professor')) Inicio
 end content
+
+block script
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js', type='text/javascript', async)
+    script(src='//www.gstatic.com/charts/loader.js', type='text/javascript', async)
+end script

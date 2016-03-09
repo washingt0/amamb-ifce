@@ -25,8 +25,9 @@ def close_connection(exception):
 @app.context_processor
 def inject_user():
     username = None
-    if session['logged'] == 1 and 'prof_name' in session:
-        username = session['prof_name']
+    if 'logged' in session:
+        if session['logged'] == 1 and 'prof_name' in session:
+            username = session['prof_name']
     return dict(username=username)
 
 # INDEX
