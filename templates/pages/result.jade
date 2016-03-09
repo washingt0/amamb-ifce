@@ -2,17 +2,7 @@ extends layout
 - var title = 'Resultados'
 block content
     h3.page-header #{mensagem} #{variavel}
-    div(id="chart-view") 
-    table
-        each x in resultado
-            tr
-                td="->Nome: " + x[0]
-                td="Acertos: " + x[1]
-                td="Questoes: " + x[3]
-                td="Prova: " + x[2]
-    br
-
-    a.btn.btn-lg.btn-success(href=url_for('professor')) Inicio
+    div.col-xs-11(id="chart-view",style="min-height: 360px;")
 end content
 
 block script
@@ -22,21 +12,31 @@ block script
         $(function(){
             google.charts.load('current',{'packages':['corechart']});
             var chartLoaded = function(){
-                var data = new google.visualization.DataTable();
-                data.addColumn('string','Topping');
-                data.addColumn('number','Slices');
-                data.addRows([
-                    ['Joao',3],
-                    ['Pedro',4],
-                    ['Cicero',9]
-                ]);
                 var options = {
-                    'title': 'Resultados de prova',
-                    'width': 400,
-                    'height': 300
+                    'title': 'Acertos por aluno',
                 };
                 var chart = new google.visualization.BarChart($('#chart-view').get(0));
-                chart.draw(data,options);
+                var data = new google.visualization.DataTable();
+                data.addColumn('string','Nome');
+                data.addColumn('number','Acertos');
+                var chartDataCallback = function(){
+                    $.ajax({
+                        url: '#{url_for('api_res_prov')}',
+                        dataType: 'json'
+                    }).done(function(json){
+                        var currentRows = data.getNumberOfRows();
+                        if(currentRows < json.resultados.length){
+                            data.addRows(json.resultados.length);
+                        }
+                        for(var i = 0; i < json.resultados.length; i++){
+                            data.setCell(i,0,json.resultados[i][0]);
+                            data.setCell(i,1,json.resultados[i][1]);
+                        }
+                        chart.draw(data,options);
+                    });
+                };
+                chartDataCallback();
+                setInterval(chartDataCallback,5000);
             };
             google.charts.setOnLoadCallback(chartLoaded);
         });

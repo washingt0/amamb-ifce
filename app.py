@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session, g, url_for, redirect
+from flask import Flask, request, render_template, session, g, url_for, redirect, jsonify
 from database import db_connect, db_init, db_query
 from random import randint
 import rexpr
@@ -270,6 +270,16 @@ def login():
     else:
         return render_template("pages/mensagem.jade", mensagem="Houve um erro")
 
+
+@app.route("/api/prof/res_prov")
+def api_res_prov(): 
+    resultados = []
+    if session['logged']:
+        banco = get_db().cursor()
+        banco.execute(db_query(get_db(), 'SELECT_RESOLUCAO'), (session['prof_logged'],))
+        resultados = banco.fetchall()
+        banco.close()
+    return jsonify(resultados=resultados)
 
 # rota que mostra as resolucoes das provas de um professor
 @app.route("/prof/res_prov", methods=['POST', 'GET'])
