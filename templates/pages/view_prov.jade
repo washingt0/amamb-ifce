@@ -4,14 +4,19 @@ extends layout
 - var tipos = ["Adicao/Subtracao", "Multiplicacao", "Divisao", "Potenciacao", "Radiciacao"]
 block content
     h3.page-header #{mensagem} #{variavel}
-    table
-        each x in resultado
-            tr
-                td="->ID: " + x[0]
-                td="Tipo: " + tipos[x[2]-1]
-                td="Dificuldade: " + dific[x[3]-1]
-                td="Qtd Questoes: " + x[4]
-    br
-
+    div.col-xs-12
+        table.table.table-striped
+            thead
+                th ID
+                th Tipo
+                th Dificuldade
+                th Qtd.
+            each x in resultado
+                tr
+                    td= x[0]
+                    td= tipos[x[2]-1]
+                    td= dific[x[3]-1]
+                    td= x[4]
     a.btn.btn-lg.btn-success(href=url_for('professor')) Inicio
 end content
+

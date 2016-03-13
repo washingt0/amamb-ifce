@@ -2,10 +2,7 @@ extends layout
 - var title = 'Prova'
 block content
     h3.page-header Prova
-    p Aluno: #{nome}
-    br
-    p Email do aluno: #{email}
-    br
-    p Prova: #{prova}
+    h2 Aluno: #{nome}
+    h2 Prova: #{prova}
     a.btn.btn-lg.btn-success(href=url_for('question')) Iniciar prova
 end block
