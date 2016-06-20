@@ -3,6 +3,7 @@ from database import db_connect, db_init, db_query
 from random import randint
 import rexpr
 import hashlib
+from confirm_mail import send_mail
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -18,9 +19,11 @@ def get_db():
 
 @app.teardown_appcontext
 def close_connection(exception):
+    print exception
     db = getattr(g, '_db_instance', None)
     if db is not None:
         db.close()
+
 
 @app.context_processor
 def inject_user():
@@ -29,6 +32,7 @@ def inject_user():
         if session['logged'] == 1 and 'prof_name' in session:
             username = session['prof_name']
     return dict(username=username)
+
 
 # INDEX
 @app.route("/")
@@ -43,9 +47,11 @@ def index():
     session['istest'] = 0
     return render_template("pages/index.jade")
 
+
 @app.route("/creditos")
 def creditos():
     return render_template("pages/creditos.jade")
+
 
 # GERACAO DOS NUMEROS PARA A QUESTAO
 @app.route("/solve")
@@ -194,17 +200,23 @@ def prova():
 
 
 # funcao para adicionar novo usuario ao banco
-def adduser(name, user, key):
+def adduser(name, email, user, key):
     banco = get_db().cursor()
     passw = hashlib.md5(str(key) + "lolzinho")
     key = passw.hexdigest()
+    mail = hashlib.md5(str(email) + "churros")
+    mail = mail.hexdigest()
     try:
-        banco.execute(db_query(get_db(), 'INSERT_PROF'), (name, user, key))
+        banco.execute(db_query(get_db(), 'INSERT_PROF'), (name, email, user, key))
+        banco.execute(db_query(get_db(), 'INSERT_EMAIL_TEMP'), (email, mail))
         get_db().commit()
     except ValueError:
-        return render_template("pages/mensagem.jade", mensagem="Houvr um erro")
-    banco.close()
-    return 0
+        return render_template("pages/mensagem.jade", mensagem="Houve um erro")
+    if send_mail(email, mail) == 0:
+        banco.close()
+        return 0
+    else:
+        return render_template("pages/mensagem.jade", mensagem="Houve um erro")
 
 
 # funcao que tenta efetuar o login
@@ -218,7 +230,7 @@ def trylogin(user, key):
     if senha:
         if key == senha[1]:
             session['prof_logged'] = senha[0]
-            session['prof_name']   = senha[2]
+            session['prof_name'] = senha[2]
             return 1
         else:
             return 0
@@ -281,6 +293,7 @@ def api_res_prov():
         banco.close()
     return jsonify(resultados=resultados)
 
+
 # rota que mostra as resolucoes das provas de um professor
 @app.route("/prof/res_prov", methods=['POST', 'GET'])
 def res_prov():
@@ -310,13 +323,14 @@ def newprof():
     try:
         nome = request.form.get('nome')
         usuario = request.form.get('user')
+        email = request.form.get('email')
         senha1 = request.form.get('key')
         senha2 = request.form.get('keyConfirm')
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
     if senha1 == senha2:
         try:
-            adduser(nome, usuario, senha1)
+            adduser(nome, email, usuario, senha1)
             return render_template("pages/mensagem.jade", mensagem="Cadastro efetuado com sucesso")
         except ValueError:
             return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
@@ -377,6 +391,13 @@ def newprov():
             return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
     else:
         return redirect(url_for('logar'))
+
+
+@app.route("/confirm", methods=['GET'])
+def confirm():
+
+    return render_template(url_for('/'))
+
 
 def debug():
     import os.path

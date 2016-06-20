@@ -16,12 +16,17 @@ block content
                     br
                     br
                 p
+                    h4 Email:
+                    input.input.input-lg.input.email.form-control(name='email', id='input-email', aria-autocomplete="off", autofocus)
+                br
+                br
+                p
                     h4 Senha:
                     input.input.input-lg.input-prova.form-control(name='key',id='input-key',autocomplete="off",autofocus, type='password')
                     br
                 p
                     h4 Cornfirme a senha:
-                input.input.input-lg.input-prova.form-control(name='keyConfirm',id='input-keyConfirm',autocomplete="off",autofocus, type='password')
+                    input.input.input-lg.input-prova.form-control(name='keyConfirm',id='input-keyConfirm',autocomplete="off",autofocus, type='password')
                 br
                 button.btn.btn-lg.btn-success(type='submit') Cadastrar
 end block
