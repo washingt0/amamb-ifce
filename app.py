@@ -19,7 +19,8 @@ def get_db():
 
 @app.teardown_appcontext
 def close_connection(exception):
-    print exception
+    if exception is not None:
+        print exception
     db = getattr(g, '_db_instance', None)
     if db is not None:
         db.close()
@@ -228,6 +229,8 @@ def trylogin(user, key):
     senha = banco.fetchone()
     banco.close()
     if senha:
+        if senha[3] == 0:
+            return 2
         if key == senha[1]:
             session['prof_logged'] = senha[0]
             session['prof_name'] = senha[2]
@@ -279,6 +282,10 @@ def login():
         return render_template("pages/mensagem.jade", mensagem="Senha Incorreta")
     elif testes == -1:
         return render_template("pages/mensagem.jade", mensagem="Usuario Inexistente")
+    elif testes == 2:
+        return render_template("pages/mensagem.jade", mensagem="Usuario nao ativado", variavel="Confirme atraves do "
+                                                                                               "link enviado para o seu"
+                                                                                               " email")
     else:
         return render_template("pages/mensagem.jade", mensagem="Houve um erro")
 
@@ -395,8 +402,21 @@ def newprov():
 
 @app.route("/confirm", methods=['GET'])
 def confirm():
-
-    return render_template(url_for('/'))
+    try:
+        key = request.args.get('id')
+        banco = get_db().cursor()
+        banco.execute(db_query(get_db(), 'SELECT_EMAIL_TEMP'), [key])
+        mail = banco.fetchone()
+        print mail
+        banco.execute(db_query(get_db(), 'CONFIRMA_EMAIL'), [mail[0]])
+        get_db().commit()
+        banco.execute(db_query(get_db(), 'REMOVE_EMAIL_TEMP'), [key])
+        get_db().commit()
+        banco.close()
+    except ValueError:
+        print ValueError
+        return render_template("pages/mensagem.jade", mensagem="Chave expirada")
+    return render_template("pages/mensagem.jade", mensagem="Cadastro ativado com sucesso")
 
 
 def debug():

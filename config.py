@@ -44,3 +44,12 @@ MYSQL_DB_USER = 'root'
 Senha do banco de dados.
 """
 MYSQL_DB_PASSWORD = ''
+
+"""
+Email para envio de confirmacoes
+"""
+EMAIL_USER = 'no-reply@grupostk.com'
+"""
+Senha do email
+"""
+EMAIL_PASSWD = ''
