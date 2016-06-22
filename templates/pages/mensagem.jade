@@ -1,6 +1,10 @@
 extends layout
 - var title = 'AMAMB'
 block content
-    h3.page-header #{mensagem} #{variavel}
+    h3.page-header #{titulo}
+    br
+    h4.text-default #{mensagem} #{variavel}
+    br
+    h4.text-default #{mensagem2}
     a.btn.btn-lg.btn-success(href=url_for('index')) Inicio
 end content

@@ -52,4 +52,4 @@ EMAIL_USER = 'no-reply@grupostk.com'
 """
 Senha do email
 """
-EMAIL_PASSWD = ''
+EMAIL_PASSWD = 'bT4ZZpSRaL'

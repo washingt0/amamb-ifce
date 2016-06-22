@@ -6,6 +6,7 @@ html(lang='pt')
 		title= title
 		link(href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', rel='stylesheet')
 		link(href='/static/style.css', rel='stylesheet')
+		link(href='/static/favicon.ico', rel='shortcut icon')
 		block script
 	body
 		div(id="top-bar-wrapper")
@@ -30,4 +31,9 @@ html(lang='pt')
 					© AMAMB 2016
 			div.text-center
 				small.block-center
-					a(href=url_for('creditos')) Créditos
+					a(href=url_for('creditos')) Créditos          
+				small.block-center
+					a(href=url_for('sobre')) Sobre            
+				small.block-center
+					a(href='https://www.github.com/washingt0/amamb-ifce') GitHub       
+
