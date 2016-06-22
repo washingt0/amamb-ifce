@@ -32,5 +32,4 @@ def send_mail(email, mhash, tipo):
     smtp.sendmail(config.EMAIL_USER, email, mensagem.as_string())
 
     smtp.quit()
-    print "enviado"
     return 0

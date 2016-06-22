@@ -2,12 +2,12 @@ extends layout
 - var title = 'Recuperacao de Senha'
 block content
     h3.page-header Recuperacao de senha
-    form(method="POST", action=url_for('sendForgot'))
+    form(method="POST", action=url_for('sendforgot'))
         div.col-xs-12.col-sm-6
             div.input-group
                 p
                     h4 Digite o seu email:
-                    input.input.input-lg.input-prova.form-control(name='mail',id='input-mail',autocomplete="off",autofocus, type='password')
+                    input.input.input-lg.input-prova.form-control(name='mail',id='input-mail',autocomplete="off",autofocus)
                     br
                 button.btn.btn-lg.btn-success(type='submit') Enviar
 end block

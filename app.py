@@ -432,8 +432,9 @@ def forgot():
 def change():
     return render_template("pages/change_pass.jade")
 
+
 @app.route("/forgot/send", methods=['POST'])
-def sendForgot():
+def sendforgot():
     try:
         email = request.form.get('mail')
         mail = hashlib.md5(str(email) + "churros")
@@ -441,13 +442,12 @@ def sendForgot():
         banco = get_db().cursor()
         banco.execute(db_query(get_db(), 'INSERT_EMAIL_TEMP'), (email, mail))
         get_db().commit()
-    except:
+        banco.close()
+    except ValueError:
         return render_template("pages/mensagem.jade", titulo="Houve um erro :(", mensagem="Nao foi possivel consultar "
                                                                                           "o seu email")
-    teste = send_mail(email, mail, 1)
-    if teste == 0:
+    if send_mail(email, mail, 1) == 0:
         return render_template("pages/mensagem.jade", mensagem="Email enviado")
-
 
 
 @app.route("/rescue", methods=['GET'])
@@ -455,14 +455,14 @@ def rescue():
     try:
         key = request.args.get('id')
         banco = get_db().cursor()
-        banco.execute(db_query(get_db(), 'SELECT_EMAIL_TEMP'), [key])
+        banco.execute(db_query(get_db(), 'SELECT_EMAIL_TEMP'), (key, ))
         session['reset'] = banco.fetchone()
-        banco.execute(db_query(get_db(), 'REMOVE_EMAIL_TEMP'), [key])
+        session['reset'] = session['reset'][0]
         get_db().commit()
         banco.close()
     except ValueError:
         return render_template("pages/mensagem.jade", titulo="Houve um erro :(", mensagem="Nao foi possivel consultar "
-                                                                                            "o seu email")
+                                                                                          "o seu email")
     return render_template("pages/renew_pass.jade")
 
 
@@ -470,14 +470,10 @@ def rescue():
 def renew():
     try:
         origem = request.form.get('tipo')
-        old = request.args.get('old')
-        new1 = request.args.get('key1')
-        new2 = request.args.get('key2')
-        print origem
-        print old
-        print new1
-        print new2
-    except:
+        old = request.form.get('old')
+        new1 = request.form.get('key1')
+        new2 = request.form.get('key2')
+    except ValueError:
         return render_template("pages/mensagem.jade", titulo="Houve um erro")
     if origem == '0':
         banco = get_db().cursor()
@@ -492,31 +488,34 @@ def renew():
                 try:
                     banco.execute(db_query(get_db(), 'UPDATE_SENHA_ID'), (new1, session['prof_logged']))
                     get_db().commit()
-                except:
+                    banco.close()
+                    return render_template("pages/mensagem.jade", titulo="Senha alterada com sucesso")
+                except ValueError:
                     return render_template("pages/mensagem.jade", titulo="Houve um erro durante o processamento")
             else:
                 return render_template("pages/mensagem.jade", titulo="Senhas nao conferem")
         else:
             return render_template("pages/mensagem.jade", titulo="Senha nao confere com a antiga")
-    elif origem =='1':
+    elif origem == '1':
         if new1 == new2:
             passw = hashlib.md5(str(new1) + "lolzinho")
             new1 = passw.hexdigest()
             try:
                 if 'reset' in session:
                     banco = get_db().cursor()
-                    banco.execute(db_query(get_db(), 'UPDATE_SENHA_ID'), (new1, session['reset']))
+                    banco.execute(db_query(get_db(), 'UPDATE_SENHA_EMAIL'), (new1, session['reset']))
+                    banco.execute(db_query(get_db(), 'REMOVE_EMAIL_TEMP'), (session['reset'], ))
                     get_db().commit()
+                    banco.close()
                     session.pop('reset')
+                    return render_template("pages/mensagem.jade", titulo="Senha alterada com sucesso")
                 else:
                     return render_template("pages/mensagem.jade", titulo="Nao foi possivel localizar seu cadastro")
-            except:
+            except ValueError:
                 return render_template("pages/mensagem.jade", titulo="Houve um erro durante o processamento")
         else:
             return render_template("pages/mensagem.jade", titulo="Senhas nao conferem")
-    else:
-        return render_template("pages/mensagem.jade", titulo="Os dados nao foram obtidos")
-
+    return render_template("pages/mensagem.jade", titulo="Os dados nao foram obtidos")
 
 
 def debug():
