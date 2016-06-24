@@ -518,7 +518,7 @@ def renew():
     return render_template("pages/mensagem.jade", titulo="Os dados nao foram obtidos")
 
 
-def debug():
+def init_debug():
     import os.path
     if not os.path.isfile(app.config['DB_NAME'] + '.db'):
         db = db_connect(app.config)
@@ -526,6 +526,6 @@ def debug():
         db.close()
 
 if __name__ == '__main__':
-    if app.config['DEBUG'] == True or app.config['TESTING'] == True:
-        debug()
+    if app.config['DEBUG'] == True:
+        init_debug()
     app.run(host='0.0.0.0')

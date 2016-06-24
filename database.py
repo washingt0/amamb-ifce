@@ -98,9 +98,7 @@ def db_init(db):
 
 def db_connect(config):
     db = None
-    if config['TESTING']:
-        db = sqlite3_connect(':memory:')
-    elif config['DEBUG']:
+    if config['DEBUG']:
         db = sqlite3_connect(config['DB_NAME'] + '.db')
     else:
         db = pymysql_connect(host=config['MYSQL_DB_HOST'], user=config['MYSQL_DB_USER'],
