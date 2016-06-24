@@ -8,19 +8,23 @@ def send_mail(email, mhash, tipo):
     if tipo == 0:
         mensagem = MIMEText("""
             Para confirmar o seu cadastro clique no link a seguir:
-            https://www.grupostk.com/amamb/confirm?id=%s.""" % mhash)
+            https://www.grupostk.com/amamb/confirm?id=%s
+
+            Equipe AMAMB""" % mhash)
         mensagem['Subject'] = "Confirmacao de Cadastro | AMAMB"
     elif tipo == 1:
         mensagem = MIMEText("""
             Para recuperar sua senha clique no link a seguir:
-            https://www.grupostk.com/amamb/rescue?id=%s.""" % mhash)
+            https://www.grupostk.com/amamb/rescue?id=%s
+
+            Equipe AMAMB
+            """ % mhash)
         mensagem['Subject'] = "Recuperacao de senha | AMAMB"
     elif tipo == 2:
         mensagem = MIMEText("""
-            Prova: %s
-            Professor: %s
-            Quantidade de Questoes: %s
-            Acertos: %s
+            Ola %s voce acertou %s questoes de %s, da prova %s!
+
+            Equipe AMAMB
             """ % (mhash[0], mhash[1], mhash[2], mhash[3]))
         mensagem['Subject'] = "Resultado da prova | AMAMB"
 

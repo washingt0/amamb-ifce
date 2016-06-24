@@ -75,6 +75,12 @@ def question():
                                                                        session['alunoProva'], session['alunoEmail']))
                 get_db().commit()
                 banco.close()
+                conj = []
+                conj.append(session['alunoNome'])
+                conj.append(session['count'])
+                conj.append(session['qtd_quest'])
+                conj.append(session['alunoProva'])
+                send_mail(session['alunoEmail'], conj, 2)
                 # exibe os acertos
                 return render_template("pages/mensagem.jade", mensagem="Acertos: ", variavel=session['count'])
             # se nao terminou gera uma nova questao a partir dos padroes da prova
