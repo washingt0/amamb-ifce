@@ -11,12 +11,17 @@ block content
                 th Tipo
                 th Dificuldade
                 th Qtd.
+                th Resultado
             each x in resultado
                 tr
                     td= x[0]
                     td= tipos[x[2]-1]
                     td= dific[x[3]-1]
                     td= x[4]
+                    td
+                        form(action=url_for('res_prov'), method='POST')
+                            input(type='hidden', name='prova', value='#{x[0]}')
+                            input(type='submit', value='Ver')
     a.btn.btn-lg.btn-success(href=url_for('professor')) Inicio
 end content
 

@@ -297,26 +297,31 @@ def login():
 
 
 @app.route("/api/prof/res_prov")
-def api_res_prov(): 
+def api_res_prov():
     resultados = []
     if session['logged']:
         banco = get_db().cursor()
-        banco.execute(db_query(get_db(), 'SELECT_RESOLUCAO'), (session['prof_logged'],))
+        banco.execute(db_query(get_db(), 'SELECT_RESOLUCAO'), (session['prof_logged'], session['prova']))
         resultados = banco.fetchall()
         banco.close()
     return jsonify(resultados=resultados)
 
 
 # rota que mostra as resolucoes das provas de um professor
-@app.route("/prof/res_prov", methods=['POST', 'GET'])
+@app.route("/prof/res_prov", methods=['POST'])
 def res_prov():
+    try:
+        session['prova'] = request.form.get('prova')
+    except ValueError:
+        return render_template("pages/mensagem.jade", mensagem="Houve um erro, tente novamente")
     if session['logged']:
         banco = get_db().cursor()
-        banco.execute(db_query(get_db(), 'SELECT_RESOLUCAO'), (session['prof_logged'],))
+        banco.execute(db_query(get_db(), 'SELECT_RESOLUCAO'), (session['prof_logged'], session['prova']))
         resultados = banco.fetchall()
         banco.close()
         if resultados:
-            return render_template("pages/result.jade", mensagem="Resultados", resultado=resultados)
+            return render_template("pages/result.jade", mensagem="Resultados para a prova", resultado=resultados,
+                                   variavel=session['prova'])
         else:
             return render_template("pages/mensagem.jade", mensagem="Nao ha dados")
     else:
