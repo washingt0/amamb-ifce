@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, session, g, url_for, redirect, jsonify
 from database import db_connect, db_init, db_query
 from random import randint
+from unicodedata import normalize
 import rexpr
 import hashlib
 from mail import send_mail
@@ -8,6 +9,10 @@ from mail import send_mail
 app = Flask(__name__)
 app.config.from_object('config')
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
+
+
+def rem_acento(txt, codif='utf-8'):
+    return normalize('NFKD', txt.decode(codif)).encode('ASCII','ignore')
 
 
 def get_db():
@@ -80,7 +85,10 @@ def question():
                 conj.append(session['count'])
                 conj.append(session['qtd_quest'])
                 conj.append(session['alunoProva'])
-                send_mail(session['alunoEmail'], conj, 2)
+                try:
+                    send_mail(session['alunoEmail'], conj, 2)
+                except ValueError:
+                    pass
                 # exibe os acertos
                 return render_template("pages/mensagem.jade", mensagem="Acertos: ", variavel=session['count'])
             # se nao terminou gera uma nova questao a partir dos padroes da prova
@@ -187,9 +195,10 @@ def pre():
 @app.route("/prova", methods=['POST', 'GET'])
 def prova():
     try:
-        session['alunoNome'] = request.form['nome']
-        session['alunoEmail'] = request.form['email']
-        session['alunoProva'] = request.form['prova']
+        session['alunoNome'] = request.form.get('nome')
+        session['alunoEmail'] = request.form.get('email')
+        session['alunoProva'] = request.form.get('prova')
+        session['alunoNome'] = rem_acento(session['alunoNome'].encode('utf-8'))
     except ValueError:
         session['alunoNome'] = "Nao deu"
         session['alunoEmail'] = "Nao deu"
@@ -223,12 +232,13 @@ def adduser(name, email, user, key):
         banco.execute(db_query(get_db(), 'INSERT_PROF'), (name, email, user, key))
         banco.execute(db_query(get_db(), 'INSERT_EMAIL_TEMP'), (email, mail))
         get_db().commit()
+        banco.close()
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Houve um erro")
-    if send_mail(email, mail, 0) == 0:
-        banco.close()
+    try:
+        send_mail(email, mail, 0)
         return 0
-    else:
+    except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Houve um erro")
 
 
@@ -284,6 +294,7 @@ def login():
     try:
         usuario = request.form.get('user')
         keypass = request.form.get('key')
+        usuario = rem_acento(usuario.encode('utf-8'))
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Houve um erro")
     testes = trylogin(usuario, keypass)
@@ -349,6 +360,8 @@ def newprof():
         email = request.form.get('email')
         senha1 = request.form.get('key')
         senha2 = request.form.get('keyConfirm')
+        nome = rem_acento(nome.encode('utf-8'))
+        usuario = rem_acento(usuario.encode('utf-8'))
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
     if senha1 == senha2:
@@ -457,8 +470,11 @@ def sendforgot():
     except ValueError:
         return render_template("pages/mensagem.jade", titulo="Houve um erro :(", mensagem="Nao foi possivel consultar "
                                                                                           "o seu email")
-    if send_mail(email, mail, 1) == 0:
+    try:
+        send_mail(email, mail, 1)
         return render_template("pages/mensagem.jade", mensagem="Email enviado")
+    except ValueError:
+        return render_template("pages/mensagem.jade", mensagem="Houve um erro")
 
 
 @app.route("/rescue", methods=['GET'])

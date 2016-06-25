@@ -11,13 +11,14 @@ block content
                 div.form-group
                     label(for="input-key") Senha:
                     input.input.input-lg.input-prova.form-control(name='key',id='input-key',autocomplete="off",autofocus, type='password')
-                button.btn.btn-lg.btn-success(type='submit') Cadastrar
-                a(href=url_for('forgot')) Esqueci minha senha
+                button.btn.btn-lg.btn-success(type='submit') Entrar
     br
     div.row
         form.form(action=url_for('cad_prof'))
             div.col-sm-6
                 button.btn.btn-lg.btn-success(type='submit') Novo Professor
+    br
+    a(href=url_for('forgot')) Esqueci minha senha
 
 
 
