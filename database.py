@@ -104,5 +104,5 @@ def db_connect(config):
         db = sqlite3_connect(config['DB_NAME'] + '.db')
     else:
         db = pymysql_connect(host=config['MYSQL_DB_HOST'], user=config['MYSQL_DB_USER'],
-                             password=config['MYSQL_DB_PASSWORD'], database=config['DB_NAME'])
+                             password=config['MYSQL_DB_PASSWORD'], database=config['DB_NAME'], charset='utf8')
     return db

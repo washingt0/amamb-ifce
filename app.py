@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, session, g, url_for, redirect, jsonify
 from database import db_connect, db_init, db_query
 from random import randint
-from unicodedata import normalize
 import rexpr
 import hashlib
 from mail import send_mail
@@ -9,10 +8,6 @@ from mail import send_mail
 app = Flask(__name__)
 app.config.from_object('config')
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
-
-
-def rem_acento(txt, codif='utf-8'):
-    return normalize('NFKD', txt.decode(codif)).encode('ASCII','ignore')
 
 
 def get_db():
@@ -198,7 +193,6 @@ def prova():
         session['alunoNome'] = request.form.get('nome')
         session['alunoEmail'] = request.form.get('email')
         session['alunoProva'] = request.form.get('prova')
-        session['alunoNome'] = rem_acento(session['alunoNome'].encode('utf-8'))
     except ValueError:
         session['alunoNome'] = "Nao deu"
         session['alunoEmail'] = "Nao deu"
@@ -294,7 +288,6 @@ def login():
     try:
         usuario = request.form.get('user')
         keypass = request.form.get('key')
-        usuario = rem_acento(usuario.encode('utf-8'))
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Houve um erro")
     testes = trylogin(usuario, keypass)
@@ -360,8 +353,6 @@ def newprof():
         email = request.form.get('email')
         senha1 = request.form.get('key')
         senha2 = request.form.get('keyConfirm')
-        nome = rem_acento(nome.encode('utf-8'))
-        usuario = rem_acento(usuario.encode('utf-8'))
     except ValueError:
         return render_template("pages/mensagem.jade", mensagem="Os dados nao passaram na validacao")
     if senha1 == senha2:
